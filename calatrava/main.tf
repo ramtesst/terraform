@@ -6,6 +6,10 @@ variable "nimbus_nsname" {
 
 }
 
+variable "guest_cluster_name" {
+
+}
+
 variable "storageclass" {
   default = "wdc-08-vc04c01-wcp-mgmt"
 }
@@ -20,14 +24,14 @@ resource "pacific_nimbus_namespace" "ns" {
 }
 
 resource "pacific_guestcluster" "gc" {
-   cluster_name = "gc"
+   cluster_name = "${var.guest_cluster_name}"
    namespace = "${pacific_nimbus_namespace.ns.namespace}"
    input_kubeconfig = "${pacific_nimbus_namespace.ns.kubeconfig}"
    version = "v1.16"
    network_servicedomain = "cluster.local"
    topology_controlplane_class = "best-effort-small"
    topology_workers_class = "best-effort-small"
-   topology_workers_count = 3
+   topology_workers_count = 1
    topology_controlplane_storageclass = "${var.storageclass}"
    topology_workers_storageclass = "${var.storageclass}"
    storage_defaultclass = "${var.storageclass}"
