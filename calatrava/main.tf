@@ -14,10 +14,6 @@ variable "kafka_cluster_name" {
 
 }
 
-variable "postgres_cluster_name" {
-
-}
-
 variable "storageclass" {
   default = "wdc-08-vc04c01-wcp-mgmt"
 }
@@ -60,15 +56,6 @@ resource "pacific_kafka_kafka" "tfkafka6" {
    zookeeper_storageclass = "${var.storageclass}"
    zookeeper_volume_size = "100Gi"
    secure = true
-}
-
-resource "pacific_zalando_postgres" "tfpg5" {
-   cluster_name = "${var.postgres_cluster_name}"
-   namespace = "${pacific_nimbus_namespace.ns.namespace}"
-   input_kubeconfig = "${pacific_nimbus_namespace.ns.kubeconfig}"
-   postgres_version = "11"
-   storageclass = "${var.storageclass}"
-   volume_size = "100Gi"
 }
 
 output "sv_kubeconfig" {
