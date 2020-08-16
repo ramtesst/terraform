@@ -10,7 +10,7 @@ variable "guest_cluster_name" {
 
 }
 
-variable "kafka_cluster_name" {
+variable "postgres_cluster_name" {
 
 }
 
@@ -49,17 +49,13 @@ resource "pacific_guestcluster" "gc" {
    }
 }
 
-resource "pacific_kafka_kafka" "tfkafka6" {
-   cluster_name = "${var.kafka_cluster_name}"
-   number_of_broker_nodes = 1
+resource "pacific_zalando_postgres" "tfpg5" {
+   cluster_name = "${var.postgres_cluster_name}"
    namespace = "${pacific_nimbus_namespace.ns.namespace}"
    input_kubeconfig = "${pacific_nimbus_namespace.ns.kubeconfig}"
-   kafka_version = "2.4.0"
-   broker_storageclass = "${var.storageclass}"
-   broker_volume_size = "100Gi"
-   zookeeper_storageclass = "${var.storageclass}"
-   zookeeper_volume_size = "100Gi"
-   secure = true
+   postgres_version = "11"
+   storageclass = "${var.storageclass}"
+   volume_size = "100Gi"
 }
 
 output "sv_kubeconfig" {
