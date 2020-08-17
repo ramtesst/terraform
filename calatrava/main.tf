@@ -30,7 +30,8 @@ resource "pacific_nimbus_namespace" "ns" {
 resource "pacific_pivotal_rabbitmq" "tfrabbitmq1" {
    cluster_name = "${var.rabbitmq_cluster_name}"
    replicas = 3
-   namespace = "test-ns"
+   namespace = "${pacific_nimbus_namespace.ns.namespace}"
+   input_kubeconfig = "${pacific_nimbus_namespace.ns.kubeconfig}"
    storageclass = "${var.storageclass}"
    service_type = "LoadBalancer"
    volume_size = "100Gi"
