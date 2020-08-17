@@ -14,7 +14,7 @@ variable "storageclass" {
   default = "wdc-08-vc07c01-wcp-mgmt"
 }
 
-variable "minio_cluster_name" {
+variable "rabbitmq_cluster_name" {
 
 }
 
@@ -27,19 +27,25 @@ resource "pacific_nimbus_namespace" "ns" {
    nimbus_config_file = "http://sc-dbc1212.eng.vmware.com/tommyl/mts-git/nimbus-configs/config/staging/wcp.json"
 }
 
-resource "pacific_minio" "tfminio1" {
-   cluster_name = "${var.minio_cluster_name}"
-   namespace = "${pacific_nimbus_namespace.ns.namespace}"
-   input_kubeconfig = "${pacific_nimbus_namespace.ns.kubeconfig}"
+resource "pacific_pivotal_rabbitmq" "tfrabbitmq1" {
+   cluster_name = "${var.rabbitmq_cluster_name}"
+   replicas = 3
+   namespace = "test-ns"
    storageclass = "${var.storageclass}"
+   service_type = "LoadBalancer"
    volume_size = "100Gi"
-   access_key = "minio"
-   secret_key = "minio123"
-   replicas = 4
-
-   # Encryption
-   # CpU/Mem size
-
+   image = "sabu-persistence-service-docker-local.artifactory.eng.vmware.com/rabbitmq:mar30-1"
+   resources {
+      requests {
+         cpu = "1000m"
+         memory = "2Gi"
+      }
+      limits {
+         cpu = "2000m"
+         memory = "2Gi"
+      }
+   }
+   
    tags = {
       foo = "bar-1"
       bar = "foo-1"
