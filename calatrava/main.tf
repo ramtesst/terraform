@@ -18,10 +18,6 @@ variable "rabbitmq_cluster_name" {
 
 }
 
-variable "guest_cluster_name" {
-
-}
-
 variable "minio_cluster_name" {
 
 }
@@ -74,24 +70,6 @@ resource "pacific_pivotal_rabbitmq" "tfrabbitmq1" {
    }
 }
 
-resource "pacific_guestcluster" "gc" {
-   cluster_name = "${var.guest_cluster_name}"
-   namespace = "${pacific_nimbus_namespace.ns.namespace}"
-   input_kubeconfig = "${pacific_nimbus_namespace.ns.kubeconfig}"
-   version = "v1.16"
-   network_servicedomain = "cluster.local"
-   topology_controlplane_class = "best-effort-small"
-   topology_workers_class = "best-effort-small"
-   topology_workers_count = 1
-   topology_controlplane_storageclass = "${var.storageclass}"
-   topology_workers_storageclass = "${var.storageclass}"
-   storage_defaultclass = "${var.storageclass}"
-   tags = {
-      foo = "bar-1"
-      bar = "foo-1"
-   }
-}
-
 resource "pacific_minio" "tfminio1" {
    cluster_name = "${var.minio_cluster_name}"
    namespace = "${pacific_nimbus_namespace.ns.namespace}"
@@ -113,8 +91,4 @@ resource "pacific_minio" "tfminio1" {
 
 output "sv_kubeconfig" {
   value = "${pacific_nimbus_namespace.ns.kubeconfig}"
-}
-
-output "gc_kubeconfig" {
-  value = "${pacific_guestcluster.gc.kubeconfig}"
 }
