@@ -11,6 +11,10 @@ variable "department" {
   description = "Department tag"
 }
 
+variable "private_key" {
+	description = "enter your private key"
+}
+
 resource "aws_instance" "machine1" {
     ami           = "ami-04b9e92b5572fa0d1"
     instance_type = "t2.micro"
@@ -18,6 +22,14 @@ resource "aws_instance" "machine1" {
 
     tags = {
         department = var.department
+    }
+
+    connection {
+      # The default username for our AMI
+      user = "centos"
+      private_key = var.private_key
+      host = self.public_ip
+      # The connection will use the local SSH agent for authentication.
     }
 }
 
